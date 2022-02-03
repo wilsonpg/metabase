@@ -44,7 +44,7 @@ jobs:
           ./target/uberjar/metabase.jar
           ./COMMIT-ID
           ./SHA256.sum
-  
+
   containerize_and_test_container:
     if: ${{ !(startsWith(github.ref_name,'master') || startsWith(github.ref_name,'main') || startsWith(github.ref_name,'backport') || startsWith(github.ref_name,'release')) }}
     runs-on: ubuntu-20.04
@@ -84,7 +84,7 @@ jobs:
     - name: Wait for Metabase to start
       run: while ! curl -s 'http://localhost:3000/api/health' | grep '{"status":"ok"}'; do sleep 1; done
       timeout-minutes: 1
-  
+
   check_jar:
     runs-on: ubuntu-20.04
     name: check ${{ matrix.edition }} (java ${{ matrix.java-version }})
