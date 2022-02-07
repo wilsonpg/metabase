@@ -44,7 +44,7 @@ jobs:
           ./target/uberjar/metabase.jar
           ./COMMIT-ID
           ./SHA256.sum
-  
+
   check_jar_health:
     runs-on: ubuntu-20.04
     name: check ${{ matrix.edition }} (java ${{ matrix.java-version }})
