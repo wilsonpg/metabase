@@ -26,6 +26,8 @@ describe("11914, 18978, 18977", () => {
         cy.findByText("Question").should("not.exist");
         cy.findByText(/query/).should("not.exist");
       });
+      // Click outside to close "New popover"
+      cy.get(".Nav").click();
 
       cy.findByTestId("qb-header-action-panel").within(() => {
         cy.icon("notebook").should("not.exist");
