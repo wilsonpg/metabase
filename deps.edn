@@ -154,9 +154,6 @@
  :paths
  ["src" "shared/src" "resources" "java/target/classes"]
 
- :jvm-opts
- ["-Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager"]
-
  :aliases
  {
 ;;; Local Dev & test profiles
@@ -192,6 +189,7 @@
                  "-Dmb.test.env.setting=ABCDEFG"
                  "-Duser.timezone=UTC"
                  "-Dfile.encoding=UTF-8"
+                 "-Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager"
                  "-Duser.language=en"
                  ;; Exceptions that get thrown repeatedly are created without stacktraces as a performance
                  ;; optimization in newer Java versions. This makes debugging pretty hard when working on stuff
@@ -218,7 +216,7 @@
   ;; clojure -M:run:drivers (include all drivers)
   ;; clojure -M:run:ee (include EE code)
   :run
-  {:main-opts ["-m" "metabase.core"]
+  {:main-opts ["-m" "metabase.bootstrap"]
    :jvm-opts  ["-Dmb.run.mode=dev"
                "-Djava.awt.headless=true"                   ; prevent Java icon from randomly popping up in macOS dock
                "-Dmb.jetty.port=3000"]}
@@ -414,7 +412,7 @@
 
   ;; Profile Metabase start time with clojure -M:profile
   :profile
-  {:main-opts ["-m" "metabase.core" "profile"]
+  {:main-opts ["-m" "metabase.bootstrap" "profile"]
    :jvm-opts  ["-XX:+CITime" ; print time spent in JIT compiler
                "-XX:+PrintGC"]}
 
