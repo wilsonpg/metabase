@@ -100,6 +100,7 @@ export default class VisualizationResult extends Component {
           queryBuilderMode={queryBuilderMode}
           showTitle={false}
           metadata={question.metadata()}
+          timelines={this.props.timelines}
           handleVisualizationClick={this.props.handleVisualizationClick}
           onOpenChartSettings={this.props.onOpenChartSettings}
           onUpdateWarnings={this.props.onUpdateWarnings}

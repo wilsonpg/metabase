@@ -25,6 +25,7 @@ import Databases from "metabase/entities/databases";
 
 import { getMetadata } from "metabase/selectors/metadata";
 import { getAlerts } from "metabase/alert/selectors";
+import Timelines from "metabase/entities/timelines";
 
 export const getUiControls = state => state.qb.uiControls;
 
@@ -42,6 +43,7 @@ export const getIsRunning = state => getUiControls(state).isRunning;
 export const getCard = state => state.qb.card;
 export const getOriginalCard = state => state.qb.originalCard;
 export const getLastRunCard = state => state.qb.lastRunCard;
+export const getCardId = state => getCard(state)?.id;
 
 export const getParameterValues = state => state.qb.parameterValues;
 
@@ -189,6 +191,19 @@ export const getParameters = createSelector(
       metadata,
       parameterValues,
     ),
+);
+
+export const getTimelines = createSelector(
+  [state => state, getCard],
+  (state, card) => {
+    if (!card) {
+      return [];
+    }
+
+    return Timelines.selectors.getList(state, {
+      entityQuery: { cardId: card.id, include: "events" },
+    });
+  },
 );
 
 const getLastRunDatasetQuery = createSelector(

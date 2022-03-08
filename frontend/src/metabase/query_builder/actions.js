@@ -812,7 +812,9 @@ export const loadMetadataForCardTimelines = card => (dispatch, getState) => {
   const question = new Question(card, metadata);
 
   if (question.isSaved() && question.hasBreakoutByDateTime()) {
-    return dispatch(Timelines.actions.fetchList({ cardId: card.id }));
+    return dispatch(
+      Timelines.actions.fetchList({ cardId: card.id, include: "events" }),
+    );
   }
 };
 

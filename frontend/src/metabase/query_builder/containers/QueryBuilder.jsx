@@ -61,6 +61,7 @@ import {
   getIsLiveResizable,
   getNativeEditorCursorOffset,
   getNativeEditorSelectedText,
+  getTimelines,
 } from "../selectors";
 import * as actions from "../actions";
 
@@ -125,6 +126,7 @@ const mapStateToProps = (state, props) => {
     parameters: getParameters(state),
     databaseFields: getDatabaseFields(state),
     sampleDatabaseId: getSampleDatabaseId(state),
+    timelines: getTimelines(state),
 
     isRunnable: getIsRunnable(state),
     isResultDirty: getIsResultDirty(state),
