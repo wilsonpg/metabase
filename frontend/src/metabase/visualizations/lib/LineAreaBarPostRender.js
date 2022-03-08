@@ -431,8 +431,13 @@ function parseTranslateStyleValue(value) {
 
 function onRenderAddEventsTimeline(
   chart,
-  { events, xInterval, xDomain, onHoverChange },
+  { timelines = [], xInterval, xDomain, onHoverChange },
 ) {
+  const events = getEventsFromTimelines(timelines, { xDomain });
+  if (!events.length) {
+    return;
+  }
+
   const eventsByDate = groupEvents(events, xInterval.interval);
   const eventDates = Object.keys(eventsByDate).map(
     dateISOString => new Date(dateISOString),
@@ -586,17 +591,12 @@ function onRender(
   onRenderRotateAxis(chart);
   onRenderAddExtraClickHandlers(chart);
   onRenderSetZeroGridLineClassName(chart);
-  if (isTimeseries) {
-    const events = getEventsFromTimelines(timelines, { xDomain });
-    if (events.length > 0) {
-      onRenderAddEventsTimeline(chart, {
-        events,
-        onHoverChange,
-        xInterval,
-        xDomain,
-      });
-    }
-  }
+  onRenderAddEventsTimeline(chart, {
+    timelines,
+    onHoverChange,
+    xInterval,
+    xDomain,
+  });
 }
 
 // +-------------------------------------------------------------------------------------------------------------------+
