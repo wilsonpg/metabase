@@ -29,7 +29,10 @@ function TimelineEventTooltipContent({
             </TimelineEventIconContainer>
             <TimelineEventInfoContainer>
               <TimelineEventName>{timelineEvent.name}</TimelineEventName>
-              <TimelineEventDate value={timelineEvent.timestamp} />
+              <TimelineEventDate
+                value={timelineEvent.timestamp}
+                unit={timelineEvent.time_matters ? "default" : "day"}
+              />
             </TimelineEventInfoContainer>
           </TimelineEventRow>
         </li>
