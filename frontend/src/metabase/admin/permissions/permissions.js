@@ -18,7 +18,7 @@ import {
   updateNativePermission,
   updateSchemasPermission,
   updateTablesPermission,
-} from "metabase/lib/permissions";
+} from "metabase/admin/permissions/utils/graph";
 import { getGroupFocusPermissionsUrl } from "metabase/admin/permissions/utils/urls";
 import { getMetadataWithHiddenTables } from "metabase/selectors/metadata";
 import { isDatabaseEntityId } from "./utils/data-entity-id";
@@ -206,7 +206,13 @@ const dataPermissions = handleActions(
           return state;
         }
 
-        const { value, groupId, entityId, metadata, permission } = payload;
+        const {
+          value,
+          groupId,
+          entityId,
+          metadata,
+          permission: permissionInfo,
+        } = payload;
 
         const database = metadata.database(entityId.databaseId);
 
@@ -233,8 +239,9 @@ const dataPermissions = handleActions(
             entityId,
             value,
             database,
+            permissionInfo.permission,
           );
-        } else if (permission.name === "native") {
+        } else if (permissionInfo.name === "native") {
           MetabaseAnalytics.trackStructEvent("Permissions", "native", value);
           return updateNativePermission(
             state,
@@ -242,6 +249,7 @@ const dataPermissions = handleActions(
             entityId,
             value,
             database,
+            permissionInfo.permission,
           );
         } else {
           MetabaseAnalytics.trackStructEvent("Permissions", "schemas", value);
@@ -251,6 +259,7 @@ const dataPermissions = handleActions(
             entityId,
             value,
             database,
+            permissionInfo.permission,
           );
         }
       },

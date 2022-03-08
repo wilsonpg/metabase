@@ -74,10 +74,17 @@ export function PermissionsTable({
       <PermissionsTableRoot data-testid="permission-table">
         <thead>
           <tr>
-            {columns.map(column => {
+            {columns.map(({ name, hint }) => {
               return (
-                <PermissionTableHeaderCell key={column}>
-                  <ColumnName>{column}</ColumnName>
+                <PermissionTableHeaderCell key={name}>
+                  <ColumnName>
+                    {name}{" "}
+                    {hint && (
+                      <Tooltip placement="right" tooltip={hint}>
+                        <HintIcon />
+                      </Tooltip>
+                    )}
+                  </ColumnName>
                 </PermissionTableHeaderCell>
               );
             })}

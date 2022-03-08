@@ -21,3 +21,19 @@ export type RawDataRouteParams = {
   schemaName?: string;
   tableId?: string;
 };
+
+export type DatabaseEntityId = {
+  databaseId: number;
+};
+
+export type SchemaEntityId = DatabaseEntityId & {
+  schemaName: string | undefined;
+};
+
+export type TableEntityId = SchemaEntityId & {
+  tableId: number;
+};
+
+export type EntityId = DatabaseEntityId | SchemaEntityId | TableEntityId;
+
+export type DataPermissionType = "data" | "download";
