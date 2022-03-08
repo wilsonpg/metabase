@@ -81,6 +81,7 @@ import { getPersistableDefaultSettingsForSeries } from "metabase/visualizations/
 import Databases from "metabase/entities/databases";
 import Questions from "metabase/entities/questions";
 import Snippets from "metabase/entities/snippets";
+import Timelines from "metabase/entities/timelines";
 
 import { getMetadata } from "metabase/selectors/metadata";
 import { setRequestUnloaded } from "metabase/redux/requests";
@@ -788,14 +789,31 @@ export const closeQbNewbModal = createThunkAction(CLOSE_QB_NEWB_MODAL, () => {
   };
 });
 
-export const loadMetadataForCard = card => (dispatch, getState) => {
+export const loadMetadataForCard = card => dispatch => {
+  return Promise.all([
+    dispatch(loadMetadataForCardQueries(card)),
+    dispatch(loadMetadataForCardTimelines(card)),
+  ]);
+};
+
+export const loadMetadataForCardQueries = card => (dispatch, getState) => {
   const metadata = getMetadata(getState());
   const question = new Question(card, metadata);
   const queries = [question.query()];
   if (question.isDataset()) {
     queries.push(question.composeDataset().query());
   }
+
   return dispatch(loadMetadataForQueries(queries));
+};
+
+export const loadMetadataForCardTimelines = card => (dispatch, getState) => {
+  const metadata = getMetadata(getState());
+  const question = new Question(card, metadata);
+
+  if (question.isSaved() && question.hasBreakoutByDateTime()) {
+    return dispatch(Timelines.actions.fetchList({ cardId: card.id }));
+  }
 };
 
 function hasNewColumns(question, queryResult) {
