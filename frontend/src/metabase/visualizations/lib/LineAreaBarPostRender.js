@@ -556,7 +556,7 @@ function onRender(
   chart,
   {
     isTimeseries,
-    eventTimelines,
+    timelines,
     onGoalHover,
     onHoverChange,
     isSplitAxis,
@@ -587,7 +587,7 @@ function onRender(
   onRenderAddExtraClickHandlers(chart);
   onRenderSetZeroGridLineClassName(chart);
   if (isTimeseries) {
-    const events = getEventsFromTimelines(eventTimelines, { xDomain });
+    const events = getEventsFromTimelines(timelines, { xDomain });
     if (events.length > 0) {
       onRenderAddEventsTimeline(chart, {
         events,

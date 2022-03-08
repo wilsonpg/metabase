@@ -815,7 +815,7 @@ export default function lineAreaBar(element, props) {
     onRender,
     onHoverChange,
     isScalarSeries,
-    eventTimelines,
+    timelines,
     settings,
     series,
   } = props;
@@ -930,8 +930,8 @@ export default function lineAreaBar(element, props) {
     isStacked: isStacked(parent.settings, datas),
     isTimeseries: isTimeseries(parent.settings),
     formatYValue: getYValueFormatter(parent, series, yAxisProps.yExtent),
-    eventTimelines: eventTimelines,
     datas,
+    timelines,
   });
 
   // only ordinal axis can display "null" values
