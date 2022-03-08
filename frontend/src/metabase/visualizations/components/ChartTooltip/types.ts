@@ -6,23 +6,23 @@ export type VisualizationSettings = Record<string, unknown> & {
   column?: (col: Column) => Column;
 };
 
-export type DataPoint = {
+export interface DataPoint {
   key: string;
   col?: Column;
   value?: unknown;
-};
+}
 
-export type HoveredDimension = {
+export interface HoveredDimension {
   value: string;
   column: Column;
-};
+}
 
-export type HoveredTimelineEvent = {
+export interface HoveredTimelineEvent {
   timelineEvents: TimelineEvent[];
   element: HTMLElement;
-};
+}
 
-export type HoveredObject = {
+export interface HoveredObject {
   index?: number;
   axisIndex?: number;
   seriesIndex?: number;
@@ -34,4 +34,4 @@ export type HoveredObject = {
   settings?: VisualizationSettings;
   element?: HTMLElement;
   event?: MouseEvent;
-};
+}

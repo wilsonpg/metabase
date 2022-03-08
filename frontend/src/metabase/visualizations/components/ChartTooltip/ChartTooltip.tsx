@@ -10,12 +10,28 @@ import { getEventTarget } from "./utils";
 import DataPointTooltipContent from "./DataPointTooltipContent";
 import TimelineEventTooltipContent from "./TimelineEventTooltipContent";
 
-type ChartTooltipProps = {
+export interface ChartTooltipProps {
   hovered?: HoveredObject;
   settings: VisualizationSettings;
-};
+}
 
-export default function ChartTooltip({ hovered, settings }: ChartTooltipProps) {
+const ChartTooltip = ({ hovered, settings }: ChartTooltipProps) => {
+  const tooltip = useMemo(() => {
+    if (!hovered) {
+      return null;
+    }
+
+    if (!_.isEmpty(hovered.timelineEvents)) {
+      return (
+        <TimelineEventTooltipContent
+          hovered={hovered as HoveredTimelineEvent}
+        />
+      );
+    }
+
+    return <DataPointTooltipContent hovered={hovered} settings={settings} />;
+  }, [hovered, settings]);
+
   const hasContentToDisplay = useMemo(() => {
     if (!hovered) {
       return false;
@@ -27,20 +43,6 @@ export default function ChartTooltip({ hovered, settings }: ChartTooltipProps) {
       !_.isEmpty(hovered.dimensions)
     );
   }, [hovered]);
-
-  const renderTooltipContent = useCallback(() => {
-    if (!hovered) {
-      return null;
-    }
-    if (!_.isEmpty(hovered.timelineEvents)) {
-      return (
-        <TimelineEventTooltipContent
-          hovered={hovered as HoveredTimelineEvent}
-        />
-      );
-    }
-    return <DataPointTooltipContent hovered={hovered} settings={settings} />;
-  }, [hovered, settings]);
 
   const hasTargetElement =
     hovered?.element != null && document.body.contains(hovered.element);
@@ -59,8 +61,10 @@ export default function ChartTooltip({ hovered, settings }: ChartTooltipProps) {
     <Tooltip
       reference={target}
       isOpen={isOpen}
-      tooltip={renderTooltipContent()}
+      tooltip={tooltip}
       maxWidth="unset"
     />
   ) : null;
-}
+};
+
+export default ChartTooltip;

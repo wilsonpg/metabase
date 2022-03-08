@@ -9,12 +9,12 @@ import {
 } from "./types";
 import { formatValueForTooltip } from "./utils";
 
-type TooltipRowProps = {
+interface TooltipRowProps {
   name?: string;
   value?: any;
   column?: Column;
   settings: VisualizationSettings;
-};
+}
 
 const TooltipRow = ({ name, value, column, settings }: TooltipRowProps) => (
   <tr>
@@ -27,10 +27,10 @@ const TooltipRow = ({ name, value, column, settings }: TooltipRowProps) => (
   </tr>
 );
 
-type DataPointTooltipContentProps = {
+export interface DataPointTooltipContentProps {
   hovered: HoveredObject;
   settings: VisualizationSettings;
-};
+}
 
 function getRowFromDataPoint(data: DataPoint) {
   return {
@@ -47,10 +47,10 @@ function getRowFromDimension({ column, value }: HoveredDimension) {
   };
 }
 
-function DataPointTooltipContent({
+const DataPointTooltipContent = ({
   hovered,
   settings,
-}: DataPointTooltipContentProps) {
+}: DataPointTooltipContentProps) => {
   const rows = useMemo(() => {
     if (Array.isArray(hovered.data)) {
       return hovered.data.map(getRowFromDataPoint);
@@ -86,6 +86,6 @@ function DataPointTooltipContent({
       </tbody>
     </table>
   );
-}
+};
 
 export default DataPointTooltipContent;

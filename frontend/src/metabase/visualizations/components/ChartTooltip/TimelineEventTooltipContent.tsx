@@ -8,11 +8,11 @@ import {
   TimelineEventInfoContainer,
   TimelineEventName,
   TimelineEventDate,
-} from "./ChartTooltip.styled";
+} from "./TimelineEventTooltipContent.styled";
 
-type TimelineEventTooltipContentProps = {
+export interface TimelineEventTooltipContentProps {
   hovered: HoveredTimelineEvent;
-};
+}
 
 function TimelineEventTooltipContent({
   hovered,
