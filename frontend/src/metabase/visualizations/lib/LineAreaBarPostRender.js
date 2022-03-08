@@ -560,7 +560,6 @@ function onRenderAddEventsTimeline(
 function onRender(
   chart,
   {
-    isTimeseries,
     timelines,
     onGoalHover,
     onHoverChange,
