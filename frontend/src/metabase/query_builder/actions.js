@@ -81,7 +81,6 @@ import { getPersistableDefaultSettingsForSeries } from "metabase/visualizations/
 import Databases from "metabase/entities/databases";
 import Questions from "metabase/entities/questions";
 import Snippets from "metabase/entities/snippets";
-import Timelines from "metabase/entities/timelines";
 
 import { getMetadata } from "metabase/selectors/metadata";
 import { setRequestUnloaded } from "metabase/redux/requests";
@@ -623,12 +622,9 @@ export const initializeQB = (location, params) => {
     if (card && card.id != null) {
       dispatch(fetchAlertsForQuestion(card.id));
     }
-    // Fetch the question metadata and timelines (blocking)
+    // Fetch the question metadata (blocking)
     if (card) {
-      await Promise.all([
-        dispatch(loadMetadataForCard(card)),
-        dispatch(loadTimelinesForCard(card)),
-      ]);
+      await dispatch(loadMetadataForCard(card));
     }
 
     let question = card && new Question(card, getMetadata(getState()));
@@ -799,16 +795,7 @@ export const loadMetadataForCard = card => (dispatch, getState) => {
   if (question.isDataset()) {
     queries.push(question.composeDataset().query());
   }
-
   return dispatch(loadMetadataForQueries(queries));
-};
-
-export const loadTimelinesForCard = card => (dispatch, getState) => {
-  if (card.id) {
-    return dispatch(
-      Timelines.actions.fetchList({ cardId: card.id, include: "events" }),
-    );
-  }
 };
 
 function hasNewColumns(question, queryResult) {
@@ -1207,8 +1194,6 @@ export const apiCreateQuestion = question => {
     // This is done when saving a Card because the newly saved card will be eligible for use as a source query
     // so we want the databases list to be re-fetched next time we hit "New Question" so it shows up
     dispatch(setRequestUnloaded(["entities", "databases"]));
-
-    await dispatch(loadTimelinesForCard(createdQuestion.card()));
 
     dispatch(updateUrl(createdQuestion.card(), { dirty: false }));
     MetabaseAnalytics.trackStructEvent(
