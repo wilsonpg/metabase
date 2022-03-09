@@ -623,9 +623,12 @@ export const initializeQB = (location, params) => {
     if (card && card.id != null) {
       dispatch(fetchAlertsForQuestion(card.id));
     }
-    // Fetch the question metadata (blocking)
+    // Fetch the question metadata and timelines (blocking)
     if (card) {
-      await dispatch(loadMetadataForCard(card));
+      await Promise.all([
+        dispatch(loadMetadataForCard(card)),
+        dispatch(loadTimelinesForCard(card)),
+      ]);
     }
 
     let question = card && new Question(card, getMetadata(getState()));
@@ -789,14 +792,7 @@ export const closeQbNewbModal = createThunkAction(CLOSE_QB_NEWB_MODAL, () => {
   };
 });
 
-export const loadMetadataForCard = card => dispatch => {
-  return Promise.all([
-    dispatch(loadMetadataForCardQueries(card)),
-    dispatch(loadMetadataForCardTimelines(card)),
-  ]);
-};
-
-export const loadMetadataForCardQueries = card => (dispatch, getState) => {
+export const loadMetadataForCard = card => (dispatch, getState) => {
   const metadata = getMetadata(getState());
   const question = new Question(card, metadata);
   const queries = [question.query()];
@@ -807,11 +803,8 @@ export const loadMetadataForCardQueries = card => (dispatch, getState) => {
   return dispatch(loadMetadataForQueries(queries));
 };
 
-export const loadMetadataForCardTimelines = card => (dispatch, getState) => {
-  const metadata = getMetadata(getState());
-  const question = new Question(card, metadata);
-
-  if (question.isSaved() && question.hasBreakoutByDateTime()) {
+export const loadTimelinesForCard = card => (dispatch, getState) => {
+  if (card.id) {
     return dispatch(
       Timelines.actions.fetchList({ cardId: card.id, include: "events" }),
     );
@@ -1261,6 +1254,9 @@ export const apiUpdateQuestion = (question, { rerunQuery = false } = {}) => {
     // reload the question alerts for the current question
     // (some of the old alerts might be removed during update)
     await dispatch(fetchAlertsForQuestion(updatedQuestion.id()));
+
+    // load timelines for the card in case it was not saved yet
+    await dispatch(loadTimelinesForCard(updatedQuestion.card()));
 
     // remove the databases in the store that are used to populate the QB databases list.
     // This is done when saving a Card because the newly saved card will be eligible for use as a source query

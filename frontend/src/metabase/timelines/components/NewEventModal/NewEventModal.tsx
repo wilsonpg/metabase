@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo } from "react";
 import { t } from "ttag";
 import { getDefaultTimezone } from "metabase/lib/time";
+import { getDefaultIcon } from "metabase/lib/timeline";
 import Form from "metabase/containers/Form";
 import forms from "metabase/entities/timeline-events/forms";
 import { Collection, Timeline, TimelineEvent } from "metabase-types/api";
@@ -29,7 +30,7 @@ const NewEventModal = ({
   const initialValues = useMemo(
     () => ({
       timeline_id: timeline?.id,
-      icon: timeline?.icon,
+      icon: timeline ? timeline.icon : getDefaultIcon(),
       timezone: getDefaultTimezone(),
     }),
     [timeline],
