@@ -20,7 +20,6 @@ const FORM_FIELDS = [
     name: "icon",
     title: t`Default icon`,
     type: "select",
-    initial: "star",
     options: getTimelineIcons(),
     validate: validate.required(),
   },

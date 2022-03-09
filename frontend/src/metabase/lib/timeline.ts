@@ -12,10 +12,6 @@ export const getDefaultTimeline = (
   };
 };
 
-export const getDefaultIcon = (): string => {
-  return "star";
-};
-
 export const getTimelineIcons = () => {
   return [
     { name: t`Star`, value: "star", icon: "star" },
@@ -25,4 +21,8 @@ export const getTimelineIcons = () => {
     { name: t`Bell`, value: "bell", icon: "bell" },
     { name: t`Cloud`, value: "cloud", icon: "cloud" },
   ];
+};
+
+export const getDefaultTimelineIcon = (): string => {
+  return "star";
 };

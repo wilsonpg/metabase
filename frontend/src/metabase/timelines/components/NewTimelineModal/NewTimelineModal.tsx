@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo } from "react";
 import { t } from "ttag";
+import { getDefaultTimelineIcon } from "metabase/lib/timeline";
 import Form from "metabase/containers/Form";
 import forms from "metabase/entities/timelines/forms";
 import { canonicalCollectionId } from "metabase/collections/utils";
@@ -20,9 +21,13 @@ const NewTimelineModal = ({
   onCancel,
   onClose,
 }: NewTimelineModalProps): JSX.Element => {
-  const initialValues = useMemo(() => {
-    return { collection_id: canonicalCollectionId(collection.id) };
-  }, [collection]);
+  const initialValues = useMemo(
+    () => ({
+      collection_id: canonicalCollectionId(collection.id),
+      icon: getDefaultTimelineIcon(),
+    }),
+    [collection],
+  );
 
   const handleSubmit = useCallback(
     async (values: Partial<Timeline>) => {
