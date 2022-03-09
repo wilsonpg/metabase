@@ -7,7 +7,7 @@ import {
   isRestrictivePermission,
 } from "metabase/admin/permissions/utils/graph";
 import {
-  DATA_ACCESS_IS_REQUIRED,
+  NATIVE_PERMISSION_REQUIRES_DATA_ACCESS,
   UNABLE_TO_CHANGE_ADMIN_PERMISSIONS,
 } from "../../constants/messages";
 import {
@@ -62,7 +62,7 @@ const buildAccessPermission = (
 
   return {
     permission: "data",
-    name: "access",
+    type: "access",
     isDisabled: isAdmin,
     disabledTooltip: isAdmin ? UNABLE_TO_CHANGE_ADMIN_PERMISSIONS : null,
     isHighlighted: isAdmin,
@@ -130,11 +130,11 @@ const buildNativePermission = (
 
   return {
     permission: "data",
-    name: "native",
+    type: "native",
     isDisabled: isNativePermissionDisabled,
     disabledTooltip: isAdmin
       ? UNABLE_TO_CHANGE_ADMIN_PERMISSIONS
-      : DATA_ACCESS_IS_REQUIRED,
+      : NATIVE_PERMISSION_REQUIRES_DATA_ACCESS,
     isHighlighted: isAdmin,
     value: nativePermissionValue,
     warning: nativePermissionWarning,
@@ -176,6 +176,7 @@ export const buildSchemasPermissions = (
       isAdmin,
       permissions,
       accessPermission.value,
+      "schemas",
     ),
   ];
 };

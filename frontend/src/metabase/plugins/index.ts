@@ -1,6 +1,9 @@
 import { t } from "ttag";
 import PluginPlaceholder from "metabase/plugins/components/PluginPlaceholder";
-import { DatabaseEntityId } from "metabase/admin/permissions/types";
+import {
+  DatabaseEntityId,
+  PermissionSubject,
+} from "metabase/admin/permissions/types";
 import { GroupsPermissions } from "metabase-types/api";
 
 // Plugin integration points. All exports must be objects or arrays so they can be mutated by plugins.
@@ -118,6 +121,7 @@ export const PLUGIN_FEATURE_LEVEL_PERMISSIONS = {
     _isAdmin: boolean,
     _permissions: GroupsPermissions,
     _dataAccessPermissionValue: string,
+    _permissionSubject: PermissionSubject,
   ) => {
     return [] as any;
   },

@@ -112,7 +112,7 @@ export function PermissionsTable({
 
                 {entity.permissions.map(permission => {
                   return (
-                    <PermissionsTableCell key={permission.name}>
+                    <PermissionsTableCell key={permission.type}>
                       <PermissionsSelect
                         {...permission}
                         onChange={(value, toggleState) =>

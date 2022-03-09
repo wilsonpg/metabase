@@ -10,7 +10,7 @@ export const updateTableSandboxingPermission = createThunkAction(
     return dispatch(
       updateDataPermission({
         groupId,
-        permission: { name: "access" },
+        permission: { type: "access" },
         value: "controlled",
         entityId,
       }),

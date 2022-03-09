@@ -1,5 +1,7 @@
 import { t } from "ttag";
 
+export const DOWNLOAD_PERMISSION_REQUIRES_DATA_ACCESS = t`Download results access requires full data access.`;
+
 export const DOWNLOAD_PERMISSION_OPTIONS = {
   none: {
     label: t`No`,
@@ -18,6 +20,12 @@ export const DOWNLOAD_PERMISSION_OPTIONS = {
     value: "full",
     icon: "1m",
     iconColor: "accent7",
+  },
+  controlled: {
+    label: t`Granular`,
+    value: "controlled",
+    icon: "permissions_limited",
+    iconColor: "warning",
   },
 };
 

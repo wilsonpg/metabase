@@ -6,7 +6,7 @@ import {
   getNativePermission,
 } from "metabase/admin/permissions/utils/graph";
 import {
-  DATA_ACCESS_IS_REQUIRED,
+  NATIVE_PERMISSION_REQUIRES_DATA_ACCESS,
   UNABLE_TO_CHANGE_ADMIN_PERMISSIONS,
 } from "../../constants/messages";
 import {
@@ -34,11 +34,12 @@ const buildAccessPermission = (
   defaultGroup: Group,
   database: Database | null,
 ) => {
-  const value = getFieldsPermission(permissions, groupId, entityId);
+  const value = getFieldsPermission(permissions, groupId, entityId, "data");
   const defaultGroupValue = getFieldsPermission(
     permissions,
     defaultGroup.id,
     entityId,
+    "data",
   );
 
   const warning = getPermissionWarning(
@@ -69,7 +70,7 @@ const buildAccessPermission = (
 
   return {
     permission: "data",
-    name: "access",
+    type: "access",
     isDisabled: isAdmin || PLUGIN_ADVANCED_PERMISSIONS.isBlockPermission(value),
     disabledTooltip: isAdmin ? UNABLE_TO_CHANGE_ADMIN_PERMISSIONS : null,
     isHighlighted: isAdmin,
@@ -97,11 +98,11 @@ const buildNativePermission = (
 ) => {
   return {
     permission: "data",
-    name: "native",
+    type: "native",
     isDisabled: true,
     disabledTooltip: isAdmin
       ? UNABLE_TO_CHANGE_ADMIN_PERMISSIONS
-      : DATA_ACCESS_IS_REQUIRED,
+      : NATIVE_PERMISSION_REQUIRES_DATA_ACCESS,
     isHighlighted: isAdmin,
     value: getNativePermission(permissions, groupId, entityId),
     options: [DATA_PERMISSION_OPTIONS.write, DATA_PERMISSION_OPTIONS.none],
@@ -141,6 +142,7 @@ export const buildFieldsPermissions = (
       isAdmin,
       permissions,
       accessPermission.value,
+      "fields",
     ),
   ];
 };

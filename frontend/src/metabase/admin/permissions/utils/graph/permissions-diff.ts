@@ -40,16 +40,26 @@ function diffDatabasePermissions(
   }
   // check each table in this db
   for (const table of database.tables) {
-    const oldFieldsPerm = getFieldsPermission(oldPerms, groupId, {
-      databaseId: database.id,
-      schemaName: table.schema_name || "",
-      tableId: table.id,
-    });
-    const newFieldsPerm = getFieldsPermission(newPerms, groupId, {
-      databaseId: database.id,
-      schemaName: table.schema_name || "",
-      tableId: table.id,
-    });
+    const oldFieldsPerm = getFieldsPermission(
+      oldPerms,
+      groupId,
+      {
+        databaseId: database.id,
+        schemaName: table.schema_name || "",
+        tableId: table.id,
+      },
+      "data",
+    );
+    const newFieldsPerm = getFieldsPermission(
+      newPerms,
+      groupId,
+      {
+        databaseId: database.id,
+        schemaName: table.schema_name || "",
+        tableId: table.id,
+      },
+      "data",
+    );
     if (oldFieldsPerm !== newFieldsPerm) {
       if (isRestrictivePermission(newFieldsPerm)) {
         databaseDiff.revokedTables[table.id] = { name: table.display_name };
