@@ -4,6 +4,11 @@ import {
   modal,
   describeEE,
   describeOSS,
+  assertPermissionTable,
+  modifyPermission,
+  selectSidebarItem,
+  assertSidebarItems,
+  isPermissionDisabled,
 } from "__support__/e2e/cypress";
 
 const COLLECTION_ACCESS_PERMISSION_INDEX = 0;
@@ -601,8 +606,12 @@ describeEE("scenarios > admin > permissions", () => {
       .closest("tr")
       .as("allUsersRow")
       .within(() => {
-        isPermissionDisabled(0, "No self-service", false).click();
-        isPermissionDisabled(1, "No", true);
+        isPermissionDisabled(
+          DATA_ACCESS_PERMISSION_INDEX,
+          "No self-service",
+          false,
+        ).click();
+        isPermissionDisabled(NATIVE_QUERIES_PERMISSION_INDEX, "No", true);
       });
 
     popover()
@@ -610,80 +619,8 @@ describeEE("scenarios > admin > permissions", () => {
       .click();
 
     cy.get("@allUsersRow").within(() => {
-      isPermissionDisabled(0, "Block", false);
-      isPermissionDisabled(1, "No", true);
+      isPermissionDisabled(DATA_ACCESS_PERMISSION_INDEX, "Block", false);
+      isPermissionDisabled(NATIVE_QUERIES_PERMISSION_INDEX, "No", true);
     });
   });
 });
-
-function selectSidebarItem(item) {
-  cy.findAllByRole("menuitem")
-    .contains(item)
-    .click();
-}
-
-function assertSidebarItems(items) {
-  cy.findAllByRole("menuitem").each(($menuItem, index) =>
-    cy.wrap($menuItem).should("have.text", items[index]),
-  );
-}
-
-function modifyPermission(
-  item,
-  permissionIndex,
-  value,
-  shouldPropagate = null,
-) {
-  getPermissionRowPermissions(item)
-    .eq(permissionIndex)
-    .click();
-
-  popover().within(() => {
-    if (shouldPropagate !== null) {
-      cy.findByRole("switch")
-        .as("toggle")
-        .then($el => {
-          if ($el.attr("aria-checked") !== shouldPropagate.toString()) {
-            cy.get("@toggle").click();
-          }
-        });
-    }
-    cy.findByText(value).click();
-  });
-}
-
-function getPermissionRowPermissions(item) {
-  return cy
-    .get("tbody > tr")
-    .contains(item)
-    .closest("tr")
-    .findAllByTestId("permissions-select");
-}
-
-function assertPermissionTable(rows) {
-  cy.get("tbody > tr").should("have.length", rows.length);
-
-  rows.forEach(row => {
-    const [item, ...permissions] = row;
-
-    getPermissionRowPermissions(item).each(($permissionEl, index) => {
-      cy.wrap($permissionEl).should("have.text", permissions[index]);
-    });
-  });
-}
-
-/**
- * @param {string} permission
- * @param {boolean} isDisabled
- */
-function isPermissionDisabled(index, permission, isDisabled) {
-  return (
-    cy
-      .findAllByTestId("permissions-select")
-      .eq(index)
-      .contains(permission)
-      .closest("a")
-      // This assertion works only with strings "true" | "false", and not with booleans.
-      .should("have.attr", "aria-disabled", "" + isDisabled)
-  );
-}
