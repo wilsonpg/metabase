@@ -19,7 +19,12 @@ import {
 
 const propTypes = {
   entities: PropTypes.arrayOf(PropTypes.object),
-  columns: PropTypes.arrayOf(PropTypes.string),
+  columns: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      hint: PropTypes.string,
+    }),
+  ),
   emptyState: PropTypes.node,
   onSelect: PropTypes.func,
   onChange: PropTypes.func,

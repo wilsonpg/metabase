@@ -1,11 +1,17 @@
-import { restore, popover, modal, describeEE } from "__support__/e2e/cypress";
+import {
+  restore,
+  popover,
+  modal,
+  describeEE,
+  describeOSS,
+} from "__support__/e2e/cypress";
 
 const COLLECTION_ACCESS_PERMISSION_INDEX = 0;
 
 const DATA_ACCESS_PERMISSION_INDEX = 0;
 const NATIVE_QUERIES_PERMISSION_INDEX = 1;
 
-describe("scenarios > admin > permissions", () => {
+describeOSS("scenarios > admin > permissions", () => {
   beforeEach(() => {
     restore();
     cy.signInAsAdmin();
@@ -553,12 +559,12 @@ describeEE("scenarios > admin > permissions", () => {
     cy.button("Save").click();
 
     assertPermissionTable([
-      ["Administrators", "Unrestricted", "Yes"],
-      ["All Users", "Sandboxed", "No"],
-      ["collection", "No self-service", "No"],
-      ["data", "Unrestricted", "Yes"],
-      ["nosql", "Unrestricted", "No"],
-      ["readonly", "No self-service", "No"],
+      ["Administrators", "Unrestricted", "Yes", "No"],
+      ["All Users", "Sandboxed", "No", "No"],
+      ["collection", "No self-service", "No", "No"],
+      ["data", "Unrestricted", "Yes", "No"],
+      ["nosql", "Unrestricted", "No", "No"],
+      ["readonly", "No self-service", "No", "No"],
     ]);
 
     modifyPermission(
@@ -579,12 +585,12 @@ describeEE("scenarios > admin > permissions", () => {
     cy.button("Save changes").click();
 
     assertPermissionTable([
-      ["Administrators", "Unrestricted", "Yes"],
-      ["All Users", "Sandboxed", "No"],
-      ["collection", "No self-service", "No"],
-      ["data", "Unrestricted", "Yes"],
-      ["nosql", "Unrestricted", "No"],
-      ["readonly", "No self-service", "No"],
+      ["Administrators", "Unrestricted", "Yes", "No"],
+      ["All Users", "Sandboxed", "No", "No"],
+      ["collection", "No self-service", "No", "No"],
+      ["data", "Unrestricted", "Yes", "No"],
+      ["nosql", "Unrestricted", "No", "No"],
+      ["readonly", "No self-service", "No", "No"],
     ]);
   });
 
@@ -595,8 +601,8 @@ describeEE("scenarios > admin > permissions", () => {
       .closest("tr")
       .as("allUsersRow")
       .within(() => {
-        isPermissionDisabled("No", true);
-        isPermissionDisabled("No self-service", false).click();
+        isPermissionDisabled(0, "No self-service", false).click();
+        isPermissionDisabled(1, "No", true);
       });
 
     popover()
@@ -604,8 +610,8 @@ describeEE("scenarios > admin > permissions", () => {
       .click();
 
     cy.get("@allUsersRow").within(() => {
-      isPermissionDisabled("Block", false);
-      isPermissionDisabled("No", true);
+      isPermissionDisabled(0, "Block", false);
+      isPermissionDisabled(1, "No", true);
     });
   });
 });
@@ -670,10 +676,12 @@ function assertPermissionTable(rows) {
  * @param {string} permission
  * @param {boolean} isDisabled
  */
-function isPermissionDisabled(permission, isDisabled) {
+function isPermissionDisabled(index, permission, isDisabled) {
   return (
     cy
-      .findByText(permission)
+      .findAllByTestId("permissions-select")
+      .eq(index)
+      .contains(permission)
       .closest("a")
       // This assertion works only with strings "true" | "false", and not with booleans.
       .should("have.attr", "aria-disabled", "" + isDisabled)
