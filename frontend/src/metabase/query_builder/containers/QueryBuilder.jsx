@@ -170,6 +170,7 @@ function QueryBuilder(props) {
     onChangeLocation,
     setUIControls,
     cancelQuery,
+    fetchTimelines,
   } = props;
 
   const forceUpdate = useForceUpdate();
@@ -246,6 +247,12 @@ function QueryBuilder(props) {
     closeModal();
     clearTimeout(timeout.current);
   });
+
+  useEffect(() => {
+    if (question && question.isSaved() && question.hasBreakoutByDateTime()) {
+      fetchTimelines(question.card());
+    }
+  }, [question, fetchTimelines]);
 
   useEffect(() => {
     const { isShowingDataReference, isShowingTemplateTagsEditor } = uiControls;

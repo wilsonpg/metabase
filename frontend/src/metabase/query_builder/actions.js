@@ -92,6 +92,7 @@ import {
   getPathNameFromQueryBuilderMode,
   getNextTemplateTagVisibilityState,
 } from "./utils";
+import Timelines from "metabase/entities/timelines";
 
 const PREVIEW_RESULT_LIMIT = 10;
 
@@ -796,6 +797,12 @@ export const loadMetadataForCard = card => (dispatch, getState) => {
     queries.push(question.composeDataset().query());
   }
   return dispatch(loadMetadataForQueries(queries));
+};
+
+export const fetchTimelines = card => dispatch => {
+  return dispatch(
+    Timelines.actions.fetchList({ cardId: card.id, include: "events" }),
+  );
 };
 
 function hasNewColumns(question, queryResult) {

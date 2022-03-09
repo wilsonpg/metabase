@@ -193,21 +193,6 @@ export const getParameters = createSelector(
     ),
 );
 
-export const getTimelines = createSelector(
-  [state => state, getCard, getOriginalCard],
-  (state, card, originalCard) => {
-    const savedCard = card && card.id ? card : originalCard;
-
-    if (!savedCard) {
-      return [];
-    }
-
-    return Timelines.selectors.getList(state, {
-      entityQuery: { cardId: savedCard.id, include: "events" },
-    });
-  },
-);
-
 const getLastRunDatasetQuery = createSelector(
   [getLastRunCard],
   card => card && card.dataset_query,
@@ -371,6 +356,25 @@ export const getLastRunQuestion = createSelector(
   [getMetadata, getLastRunCard, getParameterValues],
   (metadata, card, parameterValues) =>
     card && metadata && new Question(card, metadata, parameterValues),
+);
+
+export const getLastSavedQuestion = createSelector(
+  [getQuestion, getOriginalQuestion],
+  (question, originalQuestion) =>
+    question && question.isSaved() ? question : originalQuestion,
+);
+
+export const getTimelines = createSelector(
+  [state => state, getLastSavedQuestion],
+  (state, question) => {
+    if (!question) {
+      return [];
+    }
+
+    return Timelines.selectors.getList(state, {
+      entityQuery: { cardId: question.id(), include: "events" },
+    });
+  },
 );
 
 export const getZoomedObjectId = state => state.qb.zoomedRowObjectId;
