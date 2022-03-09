@@ -431,8 +431,12 @@ function parseTranslateStyleValue(value) {
 
 function onRenderAddEventsTimeline(
   chart,
-  { timelines = [], xInterval, xDomain, onHoverChange },
+  { timelines = [], xInterval, xDomain, isTimeseries, onHoverChange },
 ) {
+  if (!isTimeseries) {
+    return;
+  }
+
   const events = getEventsFromTimelines(timelines, { xDomain });
   if (!events.length) {
     return;
@@ -568,6 +572,7 @@ function onRender(
     xDomain,
     yAxisSplit,
     isStacked,
+    isTimeseries,
     formatYValue,
     datas,
   },
@@ -592,9 +597,10 @@ function onRender(
   onRenderSetZeroGridLineClassName(chart);
   onRenderAddEventsTimeline(chart, {
     timelines,
-    onHoverChange,
     xInterval,
     xDomain,
+    isTimeseries,
+    onHoverChange,
   });
 }
 
