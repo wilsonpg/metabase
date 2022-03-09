@@ -1208,6 +1208,8 @@ export const apiCreateQuestion = question => {
     // so we want the databases list to be re-fetched next time we hit "New Question" so it shows up
     dispatch(setRequestUnloaded(["entities", "databases"]));
 
+    await dispatch(loadTimelinesForCard(createdQuestion.card()));
+
     dispatch(updateUrl(createdQuestion.card(), { dirty: false }));
     MetabaseAnalytics.trackStructEvent(
       "QueryBuilder",
@@ -1254,9 +1256,6 @@ export const apiUpdateQuestion = (question, { rerunQuery = false } = {}) => {
     // reload the question alerts for the current question
     // (some of the old alerts might be removed during update)
     await dispatch(fetchAlertsForQuestion(updatedQuestion.id()));
-
-    // load timelines for the card in case it was not saved yet
-    await dispatch(loadTimelinesForCard(updatedQuestion.card()));
 
     // remove the databases in the store that are used to populate the QB databases list.
     // This is done when saving a Card because the newly saved card will be eligible for use as a source query
