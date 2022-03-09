@@ -194,14 +194,16 @@ export const getParameters = createSelector(
 );
 
 export const getTimelines = createSelector(
-  [state => state, getCard],
-  (state, card) => {
-    if (!card) {
+  [state => state, getCard, getOriginalCard],
+  (state, card, originalCard) => {
+    const savedCard = card && card.id ? card : originalCard;
+
+    if (!savedCard) {
       return [];
     }
 
     return Timelines.selectors.getList(state, {
-      entityQuery: { cardId: card.id, include: "events" },
+      entityQuery: { cardId: savedCard.id, include: "events" },
     });
   },
 );
