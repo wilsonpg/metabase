@@ -1,9 +1,9 @@
 import d3 from "d3";
 import _ from "underscore";
-import moment from "moment";
 
 import { ICON_PATHS } from "metabase/icon_paths";
 import { color } from "metabase/lib/colors";
+import { parseTimestamp } from "metabase/lib/time";
 import { clipPathReference, moveToFront } from "metabase/lib/dom";
 import {
   adjustYAxisTicksIfNeeded,
@@ -400,7 +400,7 @@ function getEventsFromTimelines(timelines, { xDomain }) {
     .flat()
     .filter(Boolean);
   return events.filter(event => {
-    const m = moment(event.timestamp);
+    const m = parseTimestamp(event.timestamp);
     return (
       m.isSame(minDateMoment) ||
       m.isBetween(minDateMoment, maxDateMoment) ||
@@ -411,7 +411,7 @@ function getEventsFromTimelines(timelines, { xDomain }) {
 
 function groupEvents(events, interval) {
   return _.groupBy(events, event =>
-    moment(event.timestamp)
+    parseTimestamp(event.timestamp)
       .clone()
       .startOf(interval)
       .toISOString(),
@@ -429,7 +429,7 @@ function parseTranslateStyleValue(value) {
   return [parseFloat(x), parseFloat(y)];
 }
 
-function onRenderAddEventsTimeline(
+function onRenderAddTimelines(
   chart,
   { timelines = [], xInterval, xDomain, isTimeseries, onHoverChange },
 ) {
@@ -595,7 +595,7 @@ function onRender(
   onRenderRotateAxis(chart);
   onRenderAddExtraClickHandlers(chart);
   onRenderSetZeroGridLineClassName(chart);
-  onRenderAddEventsTimeline(chart, {
+  onRenderAddTimelines(chart, {
     timelines,
     xInterval,
     xDomain,
