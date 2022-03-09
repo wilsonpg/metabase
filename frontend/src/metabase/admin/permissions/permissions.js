@@ -74,7 +74,7 @@ export const limitDatabasePermission = createThunkAction(
       dispatch(
         updateDataPermission({
           groupId,
-          permission: { type: "access" },
+          permission: { type: "access", permission: "data" },
           value: newValue,
           entityId,
         }),
